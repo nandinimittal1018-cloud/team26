@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ t('nav_login') }} | LifeLink{% endblock %}
+
+{% block head %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 75vh;
+        padding: 60px 20px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 440px;
+        text-align: center;
+        padding: 50px 40px;
+    }
+
+    .auth-card h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: var(--text-main);
+    }
+
+    .auth-card .subtitle {
+        color: var(--text-muted);
+        margin-bottom: 35px;
+    }
+
+    .form-group {
+        text-align: left;
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .input-icon-wrap {
+        position: relative;
+    }
+
+    .input-icon-wrap i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
+
+    .input-icon-wrap input {
+        padding-left: 48px;
+    }
+
+    .auth-footer {
+        margin-top: 30px;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="glass-card auth-card fade-in">
+        <h2>{{ t('login_title') }}</h2>
+        <p class="subtitle">{{ t('login_subtitle') }}</p>
+        <form method="POST">
+            <div class="form-group">
+                <label>{{ t('login_phone') }}</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" name="phone" class="form-control" placeholder="{{ t('login_phone_ph') }}"
+                        required>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%; font-size:1.05rem;">{{ t('login_btn')
+                }}</button>
+        </form>
+        <div class="auth-footer">
+            {{ t('login_register_link') }} <a href="{{ url_for('register') }}">{{ t('login_register_btn') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

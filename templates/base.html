@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LifeLink | Saving Lives Seamlessly{% endblock %}</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== DESIGN TOKENS — WHITE & RED BLOOD THEME ===== */
+        :root {
+            --primary: #DC2626;
+            --primary-dark: #991B1B;
+            --primary-light: #FEE2E2;
+            --primary-glow: rgba(220, 38, 38, 0.25);
+            --accent: #B91C1C;
+            --bg-main: #FFFFFF;
+            --bg-section: #FFF5F5;
+            --bg-card: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border: #F3F4F6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow: 0 10px 40px rgba(220, 38, 38, 0.08);
+            --shadow-lg: 0 20px 60px rgba(220, 38, 38, 0.12);
+        }
+
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .glass-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 8%;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .login-btn,
+        .logout-btn {
+            background: var(--primary) !important;
+            color: white !important;
+            padding: 10px 24px !important;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: 0.3s;
+        }
+
+        .login-btn:hover,
+        .logout-btn:hover {
+            background: var(--primary-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--primary-glow);
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--text-main);
+            transition: 0.3s;
+        }
+
+        /* ===== LANGUAGE SWITCHER ===== */
+        .lang-switcher {
+            position: relative;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 7px 14px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 150px;
+            z-index: 1001;
+            display: none;
+            overflow: hidden;
+        }
+
+        .lang-dropdown.show {
+            display: block;
+            animation: fadeInDown 0.2s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lang-dropdown form {
+            margin: 0;
+        }
+
+        .lang-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .lang-dropdown button:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .lang-dropdown button.active-lang {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ===== MAIN ===== */
+        main {
+            min-height: 80vh;
+        }
+
+        .page-wrap {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 60px 8%;
+        }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--primary-glow);
+            transition: 0.3s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px var(--primary-glow);
+        }
+
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            color: var(--primary);
+            padding: 14px 32px;
+            border-radius: 14px;
+            border: 2px solid var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ===== FORM CONTROLS ===== */
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        select.form-control {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--primary-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 0 15px rgba(220, 38, 38, 0);
+            }
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-lg);
+            min-width: 320px;
+            max-width: 400px;
+            animation: slideInRight 0.4s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .toast.urgency-critical {
+            border-left-color: #DC2626;
+            background: #FEF2F2;
+        }
+
+        .toast.urgency-high {
+            border-left-color: #F59E0B;
+            background: #FFFBEB;
+        }
+
+        .toast.urgency-normal {
+            border-left-color: #10B981;
+            background: #F0FDF4;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .toast-body h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .toast-body p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            padding: 0;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .modern-footer {
+            background: var(--text-main);
+            color: #D1D5DB;
+            padding: 80px 8% 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            max-width: 1300px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .footer-section p {
+            color: #9CA3AF;
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: #9CA3AF;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #9CA3AF;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            max-width: 1300px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #6B7280;
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .glass-nav {
+                padding: 0 5%;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                flex-direction: column;
+                background: white;
+                width: 75%;
+                height: 100vh;
+                padding: 100px 30px;
+                transition: 0.4s;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .page-wrap {
+                padding: 40px 5%;
+            }
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">
+                <i class="fas fa-heart-pulse"></i> Life<span>Link</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">{{
+                        t('nav_home') }}</a></li>
+                {% if 'user_id' in session %}
+                <li><a href="{{ url_for('dashboard') }}"
+                        class="{% if request.endpoint == 'dashboard' %}active{% endif %}">{{ t('nav_dashboard') }}</a>
+                </li>
+                <li><a href="{{ url_for('logout') }}" class="logout-btn">{{ t('nav_logout') }} <i
+                            class="fas fa-sign-out-alt"></i></a>
+                </li>
+                {% else %}
+                <li><a href="{{ url_for('register') }}"
+                        class="{% if request.endpoint == 'register' %}active{% endif %}">{{ t('nav_register') }}</a>
+                </li>
+                <li><a href="{{ url_for('login') }}" class="login-btn">{{ t('nav_login') }}</a></li>
+                {% endif %}
+                <li>
+                    <div class="lang-switcher">
+                        <button class="lang-btn" onclick="toggleLangDropdown(event)" type="button">
+                            <i class="fas fa-globe"></i>
+                            {{ t('lang_' + current_lang) }}
+                            <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+                        </button>
+                        <div class="lang-dropdown" id="lang-dropdown">
+                            {% for code in ['en', 'hi', 'te', 'ta', 'ur'] %}
+                            <form method="POST" action="{{ url_for('set_language') }}">
+                                <input type="hidden" name="lang" value="{{ code }}">
+                                <button type="submit" class="{% if current_lang == code %}active-lang{% endif %}">
+                                    {{ t('lang_' + code) }}
+                                </button>
+                            </form>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast notification container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="modern-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-heart-pulse" style="color:var(--primary); margin-right:8px;"></i> LifeLink</h3>
+                <p>{{ t('footer_tagline') }}</p>
+            </div>
+            <div class="footer-section">
+                <h4>{{ t('footer_navigate') }}</h4>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">{{ t('nav_home') }}</a></li>
+                    <li><a href="{{ url_for('register') }}">{{ t('nav_register') }}</a></li>
+                    <li><a href="{{ url_for('login') }}">{{ t('nav_login') }}</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>{{ t('footer_connect') }}</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>{{ t('footer_copyright') }}</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('is-active');
+            });
+        }
+
+        // Language switcher dropdown
+        function toggleLangDropdown(e) {
+            e.stopPropagation();
+            document.getElementById('lang-dropdown').classList.toggle('show');
+        }
+        document.addEventListener('click', function () {
+            document.getElementById('lang-dropdown').classList.remove('show');
+        });
+
+        // Toast notification helper
+        function showToast(title, message, urgency) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast urgency-' + (urgency || 'normal');
+            const icon = urgency === 'critical' ? '🔴' : urgency === 'high' ? '🟡' : '🟢';
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <div class="toast-body">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

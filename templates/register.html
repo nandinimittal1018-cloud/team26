@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ t('nav_register') }} | LifeLink{% endblock %}
+
+{% block head %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 60px 20px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 550px;
+        padding: 50px 40px;
+    }
+
+    .auth-card h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        text-align: center;
+        color: var(--text-main);
+    }
+
+    .auth-card .subtitle {
+        color: var(--text-muted);
+        margin-bottom: 35px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .input-icon-wrap {
+        position: relative;
+    }
+
+    .input-icon-wrap i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
+
+    .input-icon-wrap input {
+        padding-left: 48px;
+    }
+
+    .auth-footer {
+        margin-top: 30px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .btn-pulse {
+        animation: pulse-register 2s infinite;
+    }
+
+    @keyframes pulse-register {
+
+        0%,
+        100% {
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        50% {
+            box-shadow: 0 4px 20px var(--primary-glow), 0 0 0 12px rgba(220, 38, 38, 0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="glass-card auth-card fade-in">
+        <h2>{{ t('register_title') }}</h2>
+        <p class="subtitle">{{ t('register_subtitle') }}</p>
+        <form method="POST">
+            <div class="form-group">
+                <label>{{ t('register_name') }}</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-user"></i>
+                    <input name="name" class="form-control" placeholder="{{ t('register_name_ph') }}" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>{{ t('register_blood') }}</label>
+                    <select name="blood_group" class="form-control" required>
+                        <option value="">{{ t('register_blood_ph') }}</option>
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>O+</option>
+                        <option>O-</option>
+                        <option>AB+</option>
+                        <option>AB-</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{{ t('register_phone') }}</label>
+                    <input name="phone" class="form-control" placeholder="{{ t('register_phone_ph') }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>{{ t('register_role') }}</label>
+                <select name="role" class="form-control" required>
+                    <option value="">{{ t('register_role_ph') }}</option>
+                    <option value="donor">{{ t('register_role_donor') }}</option>
+                    <option value="recipient">{{ t('register_role_recipient') }}</option>
+                </select>
+            </div>
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+            <button type="submit" class="btn-primary btn-pulse" style="width:100%; font-size:1.05rem; margin-top:10px;">
+                {{ t('register_btn') }}
+            </button>
+        </form>
+        <div class="auth-footer">
+            {{ t('register_login_link') }} <a href="{{ url_for('login') }}">{{ t('register_login_btn') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            document.getElementById("latitude").value = pos.coords.latitude;
+            document.getElementById("longitude").value = pos.coords.longitude;
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | LifeLink{% endblock %}
+
+{% block head %}
+<style>
+    .dash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .dash-header h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+    }
+
+    .dash-header .subtitle {
+        color: var(--text-muted);
+        margin-top: 5px;
+    }
+
+    .user-badge {
+        background: var(--primary-light);
+        border: 1px solid var(--border);
+        padding: 12px 22px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+    }
+
+    .user-badge i {
+        color: var(--primary);
+        font-size: 1.4rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-mini {
+        text-align: center;
+        padding: 25px 15px;
+    }
+
+    .stat-mini h3 {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 6px;
+    }
+
+    .stat-mini p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .dash-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .donor-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .donor-item:last-child {
+        border-bottom: none;
+    }
+
+    .donor-info h4 {
+        margin-bottom: 4px;
+    }
+
+    .donor-info p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .blood-tag {
+        display: inline-block;
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 3px 10px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 0.8rem;
+        margin-left: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        opacity: 0.3;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    /* ===== EMERGENCY ALERTS PANEL ===== */
+    .emergency-panel {
+        margin-bottom: 30px;
+    }
+
+    .emergency-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: 14px;
+        margin-bottom: 12px;
+        border: 1px solid var(--border);
+        background: white;
+        transition: 0.3s;
+    }
+
+    .emergency-card:hover {
+        box-shadow: var(--shadow);
+    }
+
+    .emergency-card.urgency-critical {
+        border-left: 5px solid #DC2626;
+        background: #FEF2F2;
+    }
+
+    .emergency-card.urgency-high {
+        border-left: 5px solid #F59E0B;
+        background: #FFFBEB;
+    }
+
+    .emergency-card.urgency-normal {
+        border-left: 5px solid #10B981;
+        background: #F0FDF4;
+    }
+
+    .emergency-info {
+        flex: 1;
+    }
+
+    .emergency-info h4 {
+        font-size: 1rem;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .emergency-info p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .urgency-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .urgency-badge.critical {
+        background: #FEE2E2;
+        color: #DC2626;
+    }
+
+    .urgency-badge.high {
+        background: #FEF3C7;
+        color: #D97706;
+    }
+
+    .urgency-badge.normal {
+        background: #D1FAE5;
+        color: #059669;
+    }
+
+    .btn-respond {
+        padding: 10px 22px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.3s;
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    .btn-respond:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    .btn-respond:disabled {
+        background: #9CA3AF;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    @media (max-width: 1000px) {
+        .dash-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    <div class="dash-header fade-in">
+        <div>
+            <h1>{{ t('dash_welcome') }} {{ user.name }}</h1>
+            <p class="subtitle">{{ t('dash_subtitle') }}</p>
+        </div>
+        <div class="user-badge">
+            <i class="fas fa-user-circle"></i>
+            <span>{{ user.role|capitalize }} &bull; {{ user.blood_group }}</span>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="glass-card stat-mini fade-in">
+            <h3>{{ total_donors }}</h3>
+            <p>{{ t('dash_active_donors') }}</p>
+        </div>
+        <div class="glass-card stat-mini fade-in" style="animation-delay:0.1s">
+            <h3>{{ available_donors }}</h3>
+            <p>{{ t('dash_available_now') }}</p>
+        </div>
+        <div class="glass-card stat-mini fade-in" style="animation-delay:0.2s">
+            <h3>{{ total_requests }}</h3>
+            <p>{{ t('dash_global_alerts') }}</p>
+        </div>
+        <div class="glass-card stat-mini fade-in" style="animation-delay:0.3s">
+            <h3>{{ user.donation_count }}</h3>
+            <p>{{ t('dash_your_donations') }}</p>
+        </div>
+    </div>
+
+    <!-- ACTIVE EMERGENCY ALERTS -->
+    <div class="emergency-panel fade-in" style="animation-delay:0.35s">
+        <div class="glass-card" style="padding:25px 30px;">
+            <h3 style="margin-bottom:20px; color:var(--primary);">
+                <i class="fas fa-bell"></i> {{ t('emergency_active') }}
+            </h3>
+            <div id="emergency-list">
+                {% if emergencies and emergencies|length > 0 %}
+                {% for em in emergencies %}
+                <div class="emergency-card urgency-{{ em.urgency_level }}" id="em-{{ em.id }}">
+                    <div class="emergency-info">
+                        <h4>
+                            <span class="blood-tag">{{ em.blood_group }}</span>
+                            <span class="urgency-badge {{ em.urgency_level }}">{{ em.urgency_level }}</span>
+                        </h4>
+                        <p><i class="fas fa-user"></i> {{ t('emergency_by') }}: {{ em.requester_name }} &bull; {{
+                            em.timestamp }}</p>
+                    </div>
+                    {% if em.requester_id != user.id %}
+                    <button class="btn-respond" onclick="respondEmergency({{ em.id }}, this)">
+                        {{ t('emergency_respond') }}
+                    </button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state" id="no-emergencies">
+                    <i class="fas fa-check-circle"></i>
+                    <p>{{ t('emergency_no_active') }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-grid">
+        <div class="glass-card fade-in" style="animation-delay:0.4s">
+            <h3 style="margin-bottom:25px;">
+                <i class="fas fa-map-marker-alt" style="color:var(--primary); margin-right:10px;"></i>
+                {{ t('dash_nearby') }}
+            </h3>
+            {% if donors and donors|length > 0 %}
+            {% for donor, distance in donors %}
+            <div class="donor-item">
+                <div class="donor-info">
+                    <h4>{{ donor.name }} <span class="blood-tag">{{ donor.blood_group }}</span></h4>
+                    <p><i class="fas fa-location-arrow"></i> {{ distance }} {{ t('dash_km_away') }}</p>
+                </div>
+                <a href="/chat/{{ donor.id }}" class="btn-primary" style="padding:8px 18px; font-size:0.85rem;">{{
+                    t('dash_message') }}</a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-search-location"></i>
+                <p>{{ t('dash_no_donors') }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="glass-card fade-in" style="animation-delay:0.45s">
+            <h3 style="margin-bottom:20px; color:var(--primary);">
+                <i class="fas fa-exclamation-triangle"></i> {{ t('emergency_title') }}
+            </h3>
+            <form method="POST" action="/emergency">
+                <div class="form-group">
+                    <label>{{ t('emergency_blood_needed') }}</label>
+                    <select name="blood_group" class="form-control" required>
+                        <option value="">{{ t('emergency_choose') }}</option>
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>O+</option>
+                        <option>O-</option>
+                        <option>AB+</option>
+                        <option>AB-</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{{ t('emergency_urgency') }}</label>
+                    <select name="urgency" class="form-control" required>
+                        <option value="normal">{{ t('emergency_normal') }}</option>
+                        <option value="high">{{ t('emergency_high') }}</option>
+                        <option value="critical">{{ t('emergency_critical') }}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; margin-top:10px;">
+                    {{ t('emergency_broadcast') }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+    const socket = io();
+
+    // Real-time: new emergency arrives
+    socket.on('new_emergency', function (data) {
+        // Show toast notification
+        showToast(
+            '{{ t("emergency_alert_title") }}',
+            '{{ t("emergency_alert_blood") }}: ' + data.blood_group + ' | {{ t("emergency_alert_urgency") }}: ' + data.urgency + ' | {{ t("emergency_alert_requester") }}: ' + data.requester,
+            data.urgency
+        );
+
+        // Add emergency card to the list
+        const list = document.getElementById('emergency-list');
+        const noEmergencies = document.getElementById('no-emergencies');
+        if (noEmergencies) noEmergencies.remove();
+
+        const card = document.createElement('div');
+        card.className = 'emergency-card urgency-' + data.urgency;
+        card.id = 'em-' + data.id;
+
+        const currentUserId = {{ user.id }
+    };
+    const respondBtn = data.requester_id !== currentUserId
+        ? `<button class="btn-respond" onclick="respondEmergency(${data.id}, this)">{{ t('emergency_respond') }}</button>`
+        : '';
+
+    card.innerHTML = `
+            <div class="emergency-info">
+                <h4>
+                    <span class="blood-tag">${data.blood_group}</span>
+                    <span class="urgency-badge ${data.urgency}">${data.urgency}</span>
+                </h4>
+                <p><i class="fas fa-user"></i> {{ t('emergency_by') }}: ${data.requester} &bull; ${data.timestamp}</p>
+            </div>
+            ${respondBtn}
+        `;
+    list.insertBefore(card, list.firstChild);
+    });
+
+    // Real-time: someone responded to your emergency
+    socket.on('emergency_responded', function (data) {
+        showToast(
+            '✅ {{ t("emergency_responded") }}',
+            data.responder_name + ' (' + data.responder_blood + ')',
+            'normal'
+        );
+        const card = document.getElementById('em-' + data.emergency_id);
+        if (card) {
+            card.style.opacity = '0.5';
+            const btn = card.querySelector('.btn-respond');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '{{ t("emergency_responded") }}';
+            }
+        }
+    });
+
+    // Respond to an emergency
+    function respondEmergency(id, btn) {
+        btn.disabled = true;
+        btn.textContent = '...';
+        fetch('/emergency/' + id + '/respond', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    btn.textContent = '{{ t("emergency_responded") }}';
+                    const card = document.getElementById('em-' + id);
+                    if (card) card.style.opacity = '0.5';
+                    showToast('✅', '{{ t("emergency_responded") }}', 'normal');
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = '{{ t("emergency_respond") }}';
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.textContent = '{{ t("emergency_respond") }}';
+            });
+    }
+
+    // Auto-update location
+    window.addEventListener('load', function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                fetch("/update_location", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ latitude: pos.coords.latitude, longitude: pos.coords.longitude })
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

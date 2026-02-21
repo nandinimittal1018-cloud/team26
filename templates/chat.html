@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ receiver.name }} | LifeLink{% endblock %}
+
+{% block head %}
+<style>
+    .chat-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 40px 0;
+    }
+
+    .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .chat-header .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.3rem;
+    }
+
+    .chat-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .chat-header p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .chat-panel {
+        height: 450px;
+        overflow-y: auto;
+        padding: 25px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--bg-section);
+        border-radius: 15px;
+    }
+
+    .msg {
+        max-width: 75%;
+        padding: 12px 18px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .msg.sent {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+    }
+
+    .msg.received {
+        background: white;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-bar {
+        display: flex;
+        gap: 12px;
+        padding: 15px 20px;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+    }
+
+    .chat-input-bar input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        font-size: 1rem;
+        font-family: inherit;
+        outline: none;
+    }
+
+    .chat-input-bar button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-input-bar button:hover {
+        background: var(--primary-dark);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-muted);
+        text-decoration: none;
+        margin-bottom: 25px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    <div class="chat-container">
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <div class="glass-card" style="padding: 0; overflow: hidden;">
+            <div style="padding: 25px 25px 0;">
+                <div class="chat-header">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div>
+                        <h2>{{ receiver.name }}</h2>
+                        <p>{{ receiver.blood_group }} &bull; {{ receiver.role|capitalize }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-panel" id="chat-box"></div>
+            <div style="padding: 0 20px 20px;">
+                <div class="chat-input-bar">
+                    <input type="text" id="message" placeholder="Type a message..."
+                        onkeypress="if(event.key==='Enter')sendMessage()">
+                    <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+    const socket = io();
+    const receiverId = {{ receiver.id }};
+    const chatBox = document.getElementById("chat-box");
+    function sendMessage() {
+        const input = document.getElementById("message");
+        const msg = input.value.trim();
+        if (!msg) return;
+        socket.emit('send_message', { receiver_id: receiverId, message: msg });
+        appendMsg(msg, 'sent');
+        input.value = "";
+    }
+    socket.on('receive_message', function (data) { appendMsg(data.message, 'received'); });
+    function appendMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + type;
+        div.textContent = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}

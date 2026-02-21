@@ -1,0 +1,538 @@
+{% extends 'base.html' %}
+
+{% block title %}LifeLink | Donate Blood. Save Lives.{% endblock %}
+
+{% block head %}
+<style>
+    /* ===== HERO ===== */
+    .hero {
+        background: linear-gradient(135deg, #DC2626 0%, #991B1B 50%, #7F1D1D 100%);
+        padding: 140px 8% 130px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        color: white;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hero h1 {
+        font-size: 4.2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 25px;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 550px;
+        margin: 0 auto 45px;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero .btn-primary {
+        background: white;
+        color: var(--primary);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero .btn-primary:hover {
+        background: #FEE2E2;
+        transform: translateY(-2px);
+    }
+
+    .hero .btn-outline {
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+
+    .hero .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: white;
+        color: white;
+    }
+
+    /* ===== STATS ===== */
+    .index-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        max-width: 1100px;
+        margin: -50px auto 0;
+        padding: 0 8%;
+        position: relative;
+        z-index: 3;
+    }
+
+    .index-stat {
+        text-align: center;
+        padding: 35px 20px;
+        border: 1px solid var(--border);
+    }
+
+    .index-stat h2 {
+        font-size: 2.8rem;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
+
+    .index-stat p {
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section-wrap {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 100px 8%;
+    }
+
+    .section-alt {
+        background: var(--bg-section);
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 12px;
+    }
+
+    .section-title p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 40px 30px;
+    }
+
+    .step-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 1.8rem;
+        color: var(--primary);
+    }
+
+    .step-card h3 {
+        margin-bottom: 12px;
+        font-size: 1.2rem;
+    }
+
+    .step-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    /* ===== IMPACT TREE ===== */
+    .impact-wrap {
+        background: var(--bg-section);
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        padding: 80px 40px;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .tree-svg-wrap {
+        margin: 40px auto;
+        width: 220px;
+        height: 320px;
+        position: relative;
+    }
+
+    /* SVG Tree Animation Classes */
+    .tree-svg .trunk {
+        transition: all 1.2s ease;
+    }
+
+    .tree-svg .branch {
+        opacity: 0;
+        transition: all 1s ease 0.3s;
+    }
+
+    .tree-svg .leaf-group {
+        opacity: 0;
+        transform-origin: center;
+        transition: all 1s ease 0.6s;
+    }
+
+    .tree-svg .fruit {
+        opacity: 0;
+        transition: all 0.8s ease 1s;
+    }
+
+    .tree-svg .roots {
+        transition: all 1s ease;
+    }
+
+    .tree-svg.stage-1 .trunk {}
+
+    .tree-svg.stage-1 .roots {
+        opacity: 1;
+    }
+
+    .tree-svg.stage-2 .branch {
+        opacity: 1;
+    }
+
+    .tree-svg.stage-2 .leaf-group {
+        opacity: 0.5;
+    }
+
+    .tree-svg.stage-3 .branch {
+        opacity: 1;
+    }
+
+    .tree-svg.stage-3 .leaf-group {
+        opacity: 1;
+    }
+
+    .tree-svg.stage-3 .fruit {
+        opacity: 1;
+    }
+
+    .impact-score {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--text-main);
+    }
+
+    .impact-score span {
+        color: var(--primary);
+        font-size: 2.2rem;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .testimonial-card {
+        padding: 35px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .testimonial-card p {
+        font-style: italic;
+        font-size: 1.05rem;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        line-height: 1.8;
+    }
+
+    .testimonial-card .author {
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* ===== CTA BANNER ===== */
+    .cta-banner {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        padding: 70px;
+        border-radius: 30px;
+        text-align: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        color: white;
+        box-shadow: 0 20px 60px var(--primary-glow);
+    }
+
+    .cta-banner h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .cta-banner p {
+        font-size: 1.15rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero {
+            padding: 100px 5% 90px;
+        }
+
+        .index-stats {
+            grid-template-columns: 1fr;
+            margin-top: -30px;
+        }
+
+        .impact-wrap {
+            padding: 50px 20px;
+        }
+
+        .cta-banner {
+            padding: 40px 20px;
+        }
+
+        .cta-banner h2 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content fade-in">
+        <h1>{{ t('hero_title') | safe }}</h1>
+        <p>{{ t('hero_subtitle') }}</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('register') }}" class="btn-primary">{{ t('hero_btn_donor') }}</a>
+            <a href="{{ url_for('login') }}" class="btn-outline">{{ t('hero_btn_request') }}</a>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="index-stats">
+    <div class="glass-card index-stat fade-in">
+        <h2>{{ total_users }}</h2>
+        <p>{{ t('stat_community') }}</p>
+    </div>
+    <div class="glass-card index-stat fade-in" style="animation-delay:0.15s">
+        <h2>{{ total_donors }}</h2>
+        <p>{{ t('stat_donors') }}</p>
+    </div>
+    <div class="glass-card index-stat fade-in" style="animation-delay:0.3s">
+        <h2>{{ total_requests }}</h2>
+        <p>{{ t('stat_lives') }}</p>
+    </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section-alt">
+    <div class="section-wrap">
+        <div class="section-title fade-in">
+            <h2>{{ t('how_title') }}</h2>
+            <p>{{ t('how_subtitle') }}</p>
+        </div>
+        <div class="steps-grid">
+            <div class="glass-card step-card fade-in">
+                <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                <h3>{{ t('step1_title') }}</h3>
+                <p>{{ t('step1_desc') }}</p>
+            </div>
+            <div class="glass-card step-card fade-in" style="animation-delay:0.15s">
+                <div class="step-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h3>{{ t('step2_title') }}</h3>
+                <p>{{ t('step2_desc') }}</p>
+            </div>
+            <div class="glass-card step-card fade-in" style="animation-delay:0.3s">
+                <div class="step-icon"><i class="fas fa-ambulance"></i></div>
+                <h3>{{ t('step3_title') }}</h3>
+                <p>{{ t('step3_desc') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- IMPACT TREE — Your Kindness Blooms -->
+<div class="section-wrap">
+    <div class="impact-wrap fade-in">
+        <div class="section-title">
+            <h2>{{ t('impact_title') }}</h2>
+            <p>{{ t('impact_subtitle') }}</p>
+        </div>
+
+        <div class="tree-svg-wrap">
+            <svg id="tree-svg" class="tree-svg" viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+                <!-- Ground / Soil -->
+                <ellipse cx="110" cy="305" rx="90" ry="15" fill="#5D4037" opacity="0.6" />
+
+                <!-- Roots -->
+                <g class="roots">
+                    <path d="M110 290 Q95 310 75 315" stroke="#6D4C41" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 290 Q125 310 145 315" stroke="#6D4C41" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 290 Q100 305 90 320" stroke="#6D4C41" stroke-width="2" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 290 Q120 305 130 320" stroke="#6D4C41" stroke-width="2" fill="none"
+                        stroke-linecap="round" />
+                </g>
+
+                <!-- Trunk -->
+                <g class="trunk">
+                    <path d="M110 290 Q108 240 105 200 Q103 170 107 140 Q109 120 110 100" stroke="#5D4037"
+                        stroke-width="12" fill="none" stroke-linecap="round" />
+                    <path d="M110 290 Q112 240 115 200 Q117 170 113 140 Q111 120 110 100" stroke="#4E342E"
+                        stroke-width="8" fill="none" stroke-linecap="round" opacity="0.3" />
+                </g>
+
+                <!-- Branches -->
+                <g class="branch">
+                    <path d="M108 180 Q80 160 55 155" stroke="#6D4C41" stroke-width="5" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M112 180 Q140 160 165 155" stroke="#6D4C41" stroke-width="5" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M107 145 Q85 125 60 115" stroke="#6D4C41" stroke-width="4" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M113 145 Q135 125 160 115" stroke="#6D4C41" stroke-width="4" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 120 Q95 95 80 80" stroke="#6D4C41" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 120 Q125 95 140 80" stroke="#6D4C41" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M110 100 Q110 75 110 55" stroke="#6D4C41" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                </g>
+
+                <!-- Leaf clusters -->
+                <g class="leaf-group">
+                    <circle cx="50" cy="150" r="22" fill="#43A047" opacity="0.85" />
+                    <circle cx="65" cy="140" r="18" fill="#66BB6A" opacity="0.8" />
+                    <circle cx="170" cy="150" r="22" fill="#43A047" opacity="0.85" />
+                    <circle cx="155" cy="140" r="18" fill="#66BB6A" opacity="0.8" />
+                    <circle cx="55" cy="110" r="20" fill="#388E3C" opacity="0.9" />
+                    <circle cx="72" cy="100" r="16" fill="#4CAF50" opacity="0.8" />
+                    <circle cx="165" cy="110" r="20" fill="#388E3C" opacity="0.9" />
+                    <circle cx="148" cy="100" r="16" fill="#4CAF50" opacity="0.8" />
+                    <circle cx="75" cy="75" r="18" fill="#2E7D32" opacity="0.9" />
+                    <circle cx="90" cy="65" r="15" fill="#43A047" opacity="0.85" />
+                    <circle cx="145" cy="75" r="18" fill="#2E7D32" opacity="0.9" />
+                    <circle cx="130" cy="65" r="15" fill="#43A047" opacity="0.85" />
+                    <circle cx="110" cy="50" r="20" fill="#2E7D32" opacity="0.9" />
+                    <circle cx="100" cy="40" r="14" fill="#388E3C" opacity="0.85" />
+                    <circle cx="120" cy="40" r="14" fill="#388E3C" opacity="0.85" />
+                    <circle cx="110" cy="30" r="12" fill="#43A047" opacity="0.9" />
+                </g>
+
+                <!-- Fruits / Blood drops -->
+                <g class="fruit">
+                    <path d="M58 130 Q58 122 63 127 Q58 138 53 127 Q58 122 58 130Z" fill="#DC2626" />
+                    <circle cx="58" cy="132" r="5" fill="#DC2626" />
+                    <path d="M162 130 Q162 122 167 127 Q162 138 157 127 Q162 122 162 130Z" fill="#DC2626" />
+                    <circle cx="162" cy="132" r="5" fill="#DC2626" />
+                    <path d="M80 88 Q80 80 85 85 Q80 96 75 85 Q80 80 80 88Z" fill="#EF4444" />
+                    <circle cx="80" cy="90" r="4" fill="#EF4444" />
+                    <path d="M140 88 Q140 80 145 85 Q140 96 135 85 Q140 80 140 88Z" fill="#EF4444" />
+                    <circle cx="140" cy="90" r="4" fill="#EF4444" />
+                    <path d="M110 45 Q110 37 115 42 Q110 53 105 42 Q110 37 110 45Z" fill="#DC2626" />
+                    <circle cx="110" cy="47" r="4" fill="#DC2626" />
+                    <path d="M95 108 Q95 102 99 105 Q95 114 91 105 Q95 102 95 108Z" fill="#B71C1C" />
+                    <circle cx="95" cy="110" r="3.5" fill="#B71C1C" />
+                    <path d="M130 108 Q130 102 134 105 Q130 114 126 105 Q130 102 130 108Z" fill="#B71C1C" />
+                    <circle cx="130" cy="110" r="3.5" fill="#B71C1C" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="impact-score">
+            {{ t('impact_donations') }} <span id="count">{{ user.donation_count if user else 0 }}</span>
+        </div>
+        <button onclick="addDonation()" class="btn-primary">{{ t('impact_btn') }}</button>
+    </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="section-alt">
+    <div class="section-wrap">
+        <div class="section-title fade-in">
+            <h2>{{ t('testimonial_title') }}</h2>
+        </div>
+        <div class="testimonial-grid">
+            <div class="glass-card testimonial-card fade-in">
+                <p>{{ t('testimonial_1') }}</p>
+                <div class="author">{{ t('testimonial_1_author') }}</div>
+            </div>
+            <div class="glass-card testimonial-card fade-in" style="animation-delay:0.15s">
+                <p>{{ t('testimonial_2') }}</p>
+                <div class="author">{{ t('testimonial_2_author') }}</div>
+            </div>
+            <div class="glass-card testimonial-card fade-in" style="animation-delay:0.3s">
+                <p>{{ t('testimonial_3') }}</p>
+                <div class="author">{{ t('testimonial_3_author') }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<div class="section-wrap" style="padding-bottom: 40px;">
+    <div class="cta-banner fade-in">
+        <h2>{{ t('cta_title') }}</h2>
+        <p>{{ t('cta_subtitle') }}</p>
+        <a href="{{ url_for('register') }}" class="btn-primary"
+            style="background:white; color:var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);">{{ t('cta_btn')
+            }}</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var donations = {{ user.donation_count if user else 0 }};
+
+    function updateTree() {
+        const svg = document.getElementById("tree-svg");
+        svg.className.baseVal = "tree-svg";
+        if (donations >= 1) svg.classList.add("stage-1");
+        if (donations >= 5) svg.classList.add("stage-2");
+        if (donations >= 10) svg.classList.add("stage-3");
+    }
+
+    function addDonation() {
+        donations++;
+        document.getElementById("count").textContent = donations;
+        updateTree();
+    }
+
+    updateTree();
+</script>
+{% endblock %}

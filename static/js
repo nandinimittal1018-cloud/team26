@@ -1,0 +1,14 @@
+let donations = 0;
+
+function addDonation(){
+  donations++;
+  document.getElementById("count").textContent = donations;
+
+  let tree = document.getElementById("tree");
+
+  if(donations >= 1) tree.className="tree stage-1";
+  if(donations >= 3) tree.className="tree stage-2";
+  if(donations >= 5) tree.className="tree stage-3";
+  if(donations >= 10) tree.className="tree stage-4";
+  if(donations >= 20) tree.className="tree stage-5";
+}

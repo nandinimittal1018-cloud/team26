@@ -1,0 +1,251 @@
+body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background:#f0f8ff;
+  font-family:sans-serif;
+}
+
+.tree{
+  position:relative;
+  width:200px;
+  height:300px;
+}
+
+/* Soil */
+.soil{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:60px;
+  background:#6b4f2a;
+  border-radius:50% 50% 0 0;
+}
+
+/* Seed */
+.seed{
+  position:absolute;
+  bottom:45px;
+  left:50%;
+  width:18px;
+  height:18px;
+  background:#5a3d1e;
+  border-radius:50%;
+  transform:translateX(-50%) scale(0);
+  transition:1s;
+}
+
+/* Stem */
+.stem{
+  position:absolute;
+  bottom:60px;
+  left:50%;
+  width:6px;
+  height:0;
+  background:green;
+  transform:translateX(-50%);
+  transition:1.5s;
+}
+
+/* Leaves */
+.leaves{
+  position:absolute;
+  bottom:140px;
+  left:50%;
+  width:80px;
+  height:80px;
+  transform:translateX(-50%) scale(0);
+  transition:1.5s;
+}
+
+.leaves::before,
+.leaves::after{
+  content:"";
+  position:absolute;
+  width:40px;
+  height:25px;
+  background:green;
+  border-radius:50px 50px 50px 0;
+}
+
+.leaves::before{
+  left:0;
+  transform:rotate(-30deg);
+}
+
+.leaves::after{
+  right:0;
+  transform:scaleX(-1) rotate(-30deg);
+}
+
+/* Flower */
+.flower{
+  position:absolute;
+  bottom:200px;
+  left:50%;
+  width:30px;
+  height:30px;
+  background:pink;
+  border-radius:50%;
+  transform:translateX(-50%) scale(0);
+  transition:1s;
+}
+
+/* Stages */
+
+/* 1 */
+.stage-1 .seed{
+  transform:translateX(-50%) scale(1);
+}
+
+/* 2 */
+.stage-2 .seed{ transform:translateX(-50%) scale(1); }
+.stage-2 .stem{ height:60px; }
+
+/* 3 */
+.stage-3 .stem{ height:100px; }
+.stage-3 .leaves{
+  transform:translateX(-50%) scale(1);
+}
+
+/* 4 */
+.stage-4 .stem{ height:140px; }
+.stage-4 .leaves{
+  transform:translateX(-50%) scale(1.2);
+}
+
+/* 5 */
+.stage-5 .stem{ height:160px; }
+.stage-5 .leaves{
+  transform:translateX(-50%) scale(1.4);
+}
+.stage-5 .flower{
+  transform:translateX(-50%) scale(1);
+}
+
+button{
+  margin-top:20px;
+  padding:10px 20px;
+  font-size:16px;
+  cursor:pointer;
+}
+.testimonials{
+    padding:60px 8%;
+    text-align:center;
+    background:#fff0f0;
+}
+
+.testimonials h2{
+    color:#C62828;
+    margin-bottom:40px;
+    font-size:32px;
+}
+
+.testimonial-cards{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    align-items: flex-start; /* ensures cards align at top */
+}
+
+.testimonial-card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    max-width:300px;
+    flex: 0 0 auto; /* prevents stretching */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* smoother hover */
+}
+
+.testimonial-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.15); /* optional for better hover effect */
+}
+
+.testimonial-card p{
+    font-style:italic;
+    color:#555;
+    margin-bottom:15px;
+}
+
+.testimonial-card h4{
+    color:#C62828;
+    font-weight:600;
+}
+
+.map-section{
+    padding:60px 8%;
+    background:#f8f9fa;
+    text-align:center;
+}
+.map-section h2{
+    color:#C62828;
+    margin-bottom:20px;
+    font-size:28px;
+}
+.map-section iframe{
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+}
+.map-section .btn{
+    margin-top:15px;
+}
+
+.how-it-works {
+  padding: 80px 10%;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.how-it-works h2 {
+  font-size: 36px;
+  color: #d62828;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 50px;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.step-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 280px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.step-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.step-card h3 {
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.step-card p {
+  color: #666;
+  font-size: 15px;
+}
